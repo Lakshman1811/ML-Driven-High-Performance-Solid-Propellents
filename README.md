@@ -1,33 +1,34 @@
-# Machine Learning-Driven Discovery of High Performance Solid Propellants
+# Machine Learning-Driven Discovery of High-Performance Solid Propellants
 
-A novel artificial intelligence (AI) framework that integrates machine learning (ML) with Genetic Algorithms (GAs) is introduced to accelerate the design of solid propellants. This framework utilizes high-throughput screening to identify promising energetic compounds (ECs) and optimize their formulations, significantly enhancing propellant performance. Through this approach, seven promising ECs were identified from over 1,000 candidates, with the potential to increase the specific impulse (Isp) to 278 s and enhance the range by up to 45%.
+Replication pipeline for the machine learning and genetic algorithm framework from *Wang et al., ACS Appl. Energy Mater. 2025, 8, 6756–6767*.
 
-## Training and Test Sets
+## Overview
+This repository trains dual-branch Multilayer Perceptrons (MLPs) for predicting key propellant performance characteristics ($I_{sp}$, $T_c$, $C^*$), compares them against baseline algorithms (Ridge Regression, AdaBoost, KNN), performs SHAP interpretability analysis, conducts high-throughput genetic algorithm screening over 1,079 energetic compounds (ECs), and outputs structured performance tables and research figures.
 
-The details of the training and test sets used in this study can be found in the article **Supplementary Data 1.csv**.
-https://figshare.com/articles/dataset/Supplementary_Data_1_csv/28714445
-- Number of training sets: 398,129
-- Number of test sets: 44,094
+## Quick Start
 
-## Figures
+### 1. Installation
+```bash
+pip install -r requirements.txt
+```
 
-### Figure 1
-![AI Framework for Solid Propellant Design](image-3.png)  
-**Figure 1**: A novel machine learning (ML) framework integrating machine learning and Genetic Algorithms (GAs) to accelerate solid propellant design. Through high-throughput screening, seven promising ECs were identified from over 1,000 candidates. This approach has the potential to increase the specific impulse (Isp) to 278 s and improve the rocket range by up to 45%.
+### 2. Run the Full Discovery Pipeline
+```bash
+python run_pipeline.py
+```
 
-### Figure 2
-![Workflow Modules](image-2.png)  
-**Figure 2**: The four main modules of the workflow:  
-a) Construction of the dataset.  
-b) Extraction of molecular features.  
-c) Model building.  
-d) Introduction of GAs to obtain the optimal contents of Al/ECs/HTPB/AP under certain constraints.
+## Generated Outputs (`outputs/`)
+* `paper_pipeline_results.xlsx` (or `paper_pipeline_results_latest.xlsx`):
+  * **Top100_and_Final7**: Top 100 screened energetic compounds (left) and Final 7 promising ECs (right).
+  * **Curves_and_ROC**: Train vs Test Loss curves and 3-target ROC curves with AUC annotations.
+  * **Paper_Figures_and_SHAP**: Embedded Figures 3, 4, 5, 6 (SHAP beeswarm & chemical mechanisms), and 8.
+* `train_test_loss.png`: Stabilized train and test MSE loss curves.
+* `roc_curves.png`: True Positive Rate vs False Positive Rate ROC curves for $I_{sp}, T_c, C^*$ with annotated AUC.
+* `figure3_dataset_distributions.png`: Dataset element counts, EOF, MW, and target violin distributions.
+* `figure4_model_comparison.png`: MAE, RMSE, and $R^2$ model comparison.
+* `figure5_parity_and_deviations.png`: Parity hexbin scatter plots and test deviation histograms.
+* `figure6_shap_and_mechanisms.png`: SHAP beeswarm summary plot and O/C chemical mechanisms.
+* `figure8_screening_scatter.png`: High-throughput screening scatter plot ($I_{sp}$ vs Formulation index).
+* `all_screened_ecs.csv`, `top100_ecs.csv`, `final7_ecs.csv`: Screened formulations and predicted performance metrics.
 
-### Figure 3
-![GUI Interface](image-1.png)  
-**Figure 3**: The GUI interface developed to demonstrate the AI framework integrating machine learning and genetic algorithms. The framework can be launched by running `\GAS\geatpy_.py`.
-
-## GUI Interface Launch
-
-In this study, a GUI interface was developed to showcase the integrated machine learning and genetic algorithm framework. This interface can be launched by executing the script located at `\GAS\geatpy_.py`.
 
