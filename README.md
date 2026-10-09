@@ -1,6 +1,6 @@
 # Machine Learning-Driven Discovery of High-Performance Solid Propellants
 
-**Replication pipeline and discovery framework** for machine learning surrogate modeling and genetic algorithm formulation screening of energetic compounds (*Wang et al., ACS Appl. Energy Mater. 2025, 8, 6756–6767*).
+**A dual-branch MLP surrogate modeling and genetic algorithm framework** for high-throughput formulation screening of energetic compounds in solid composite propellants.
 
 ---
 
@@ -18,17 +18,17 @@ Discovering high-performance propellant formulations requires simultaneously opt
 - **Combustion Chamber Temperature (T_c)** (Kelvin, K): Thermodynamic thermal output.
 - **Characteristic Velocity (C*)** (meters/second, m/s): Combustion efficiency index.
 
-Traditional thermodynamic calculations (such as NASA CEA) across thousands of chemical candidates and continuous weight fraction combinations are computationally prohibitive. This project implements a **Dual-Branch Multilayer Perceptron (MLP)** surrogate model coupled with a **Differential Evolution Genetic Algorithm (GA)** to perform high-throughput screening across **1,079 candidate energetic compounds**, successfully discovering formulations exceeding the high-performance benchmark (I_sp > 270 s).
+Traditional thermodynamic calculations (such as NASA CEA) across thousands of chemical candidates and continuous weight fraction combinations are computationally prohibitive. This framework implements a **Dual-Branch Multilayer Perceptron (MLP)** surrogate model coupled with a **Differential Evolution Genetic Algorithm (GA)** to perform high-throughput screening across **1,079 candidate energetic compounds**, successfully discovering formulations exceeding the high-performance benchmark (I_sp > 270 s).
 
 ---
 
-## Step-by-Step Discovery Pipeline Workflow
+## Discovery Pipeline Workflow
 
 ```mermaid
 flowchart TD
     A[Step 1: Dataset Preprocessing & Feature Engineering] --> B[Step 2: Dual-Branch MLP Model Training]
     B --> C[Step 3: Baseline Model Benchmarking]
-    C --> D[Step 4: Interpretability & Publication Figures]
+    C --> D[Step 4: Interpretability & Visualization]
     D --> E[Step 5: High-Throughput GA Formulation Screening]
     E --> F[Step 6: Automated Excel Reporting & Artifact Export]
 ```
@@ -40,7 +40,7 @@ flowchart TD
 - **Data Pruning & Normalization**: Zero-variance features and uninformative descriptors are removed. Features are standardized via `StandardScaler` (`ss_X.pkl`).
 
 ### Step 2: Dual-Branch MLP Architecture & Target Standardized Training
-- **Dual-Branch Fusion Topology** (Paper Fig. S2):
+- **Dual-Branch Fusion Topology**:
   - **Formulation Branch**: Processes the 10-dimensional formulation composition vector (10 → 128 → 256 → 256).
   - **EC Descriptor Branch**: Processes the high-dimensional molecular feature vector (N_feat → 128 → 256 → 256).
   - **Fused Head**: Concatenates both latent representations (512 dims) into a multi-layer MLP head (256 → 128 → 64 → 1) with ReLU activations and Dropout regularization (p=0.2).
@@ -53,7 +53,7 @@ flowchart TD
   3. **K-Nearest Neighbors (KNN)** (Distance-based instance learning)
 - Evaluated across R², Mean Absolute Error (MAE), and Root Mean Squared Error (RMSE) on independent test sets.
 
-### Step 4: Model Interpretability, ROC Analysis & Paper Figures
+### Step 4: Model Interpretability, ROC Analysis & Figures
 - **Loss Curves (`train_test_loss.png`)**: Convergence trajectory for MSE train vs test loss.
 - **ROC Curves (`roc_curves.png`)**: Binary ROC-AUC metrics for high-performance cutoffs (I_sp ≥ 270 s, T_c ≥ 3200 K, C* ≥ 1600 m/s).
 - **Figure 3 (`figure3_dataset_distributions.png`)**: Dataset element counts (H, C, N, O), Enthalpy of Formation (EOF), Molecular Weight, and target distributions (T_c, I_sp, C*).
@@ -62,7 +62,7 @@ flowchart TD
 - **Figure 6 (`figure6_shap_and_mechanisms.png`)**: SHAP (SHapley Additive exPlanations) summary beeswarm plot and chemical mechanism analysis (O vs C molar quantities and O/C molar ratio vs I_sp).
 
 ### Step 5: High-Throughput GA Formulation Screening
-- Formulation Search Space Constraints (Paper Section 3.4):
+- Formulation Search Space Constraints:
   - **Aluminum (Al)**: 10.0% ≤ wt% ≤ 20.0%
   - **Energetic Compound (EC)**: 10.0% ≤ wt% ≤ 40.0%
   - **Binder (HTPB)**: 12.0% ≤ wt% ≤ 14.0%
@@ -231,19 +231,6 @@ AISFD_QUICK=1 python run_pipeline.py
 
 ---
 
-## Reproducing Paper Results
-
-The pipeline faithfully replicates the methodology from *Wang et al., ACS Appl. Energy Mater. 2025*:
-
-1. **Data Split**: Pre-defined train/test split in Supplementary Data 1 (column 0)
-2. **Feature Engineering**: 10 formulation + 60+ molecular descriptors (after pruning zero-variance/all-zero features)
-3. **Model Architecture**: Dual-branch MLP with fusion head (matching paper Fig. S2 topology)
-4. **Training**: Target-standardized MSE loss, Adam optimizer, LR=1e-3, batch=512, early stopping (patience=4)
-5. **Screening**: Differential evolution GA (pop=24, gen=18 per EC) over constrained formulation space
-6. **Figures**: All 5 paper figures generated programmatically with embedded data tables
-
----
-
 ## References
 
 1. **Wang et al.**, *Machine Learning-Driven Discovery of High-Performance Solid Propellants*, **ACS Appl. Energy Mater.** 2025, 8, 6756–6767.
@@ -256,4 +243,4 @@ The pipeline faithfully replicates the methodology from *Wang et al., ACS Appl. 
 
 ## License
 
-This replication code is provided for academic research purposes. The original dataset and paper are copyright of the American Chemical Society.
+This code is provided for academic research purposes.
